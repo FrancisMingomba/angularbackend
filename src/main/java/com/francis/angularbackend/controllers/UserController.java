@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -104,6 +105,22 @@ public class UserController {
         userRepositories.save(user);
         return ResponseEntity.noContent().build();
     }
+/*
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me() {
+        var authentication =  SecurityContextHolder.getContext().getAuthentication();
+        var email = (String) authentication.getPrincipal();
 
+        var user = userRepositories.findByEmail(email).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
+
+    }
+*/
 
 }
