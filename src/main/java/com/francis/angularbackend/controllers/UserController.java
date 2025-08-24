@@ -4,6 +4,7 @@ import com.francis.angularbackend.dtos.ChangePasswordRequest;
 import com.francis.angularbackend.dtos.RegisterUserRequest;
 import com.francis.angularbackend.dtos.UpdateUserRequest;
 import com.francis.angularbackend.dtos.UserDto;
+import com.francis.angularbackend.entities.Role;
 import com.francis.angularbackend.mappers.UserMapper;
 import com.francis.angularbackend.repositories.UserRepositories;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,9 +58,10 @@ public class UserController {
          }
        var user =  userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-       userRepositories.save(user);
+        user.setRole(Role.USER);
+        userRepositories.save(user);
 
-       var userDto = userMapper.toDto(user);
+        var userDto = userMapper.toDto(user);
       var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
 
        return ResponseEntity.created(uri).body(userDto);

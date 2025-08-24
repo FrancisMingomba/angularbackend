@@ -24,6 +24,10 @@ public class User {
     @Column(nullable = false, name = "password")
     private String password;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     public String toString(){
         return getClass().getSimpleName() + "(" +
