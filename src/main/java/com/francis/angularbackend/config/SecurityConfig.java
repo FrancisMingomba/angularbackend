@@ -1,5 +1,6 @@
 package com.francis.angularbackend.config;
 
+import com.francis.angularbackend.entities.Role;
 import com.francis.angularbackend.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +59,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( c -> c
                         .requestMatchers(HttpMethod.GET,"/users").permitAll()
+                        .requestMatchers("/admin/hello/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST,"/users").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                        // .requestMatchers(HttpMethod.POST,"/auth/me").permitAll()
@@ -66,9 +68,12 @@ public class SecurityConfig {
 
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling( c ->
-                        c.authenticationEntryPoint(
-                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+                .exceptionHandling( c -> {
+                    c.authenticationEntryPoint(
+                            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                    c.accessDeniedHandler(((request, response, accessDeniedException) ->
+                            response.setStatus(HttpStatus.FORBIDDEN.value())));
+                });
 
         return http.build();
     }

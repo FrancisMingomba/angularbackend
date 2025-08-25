@@ -2,6 +2,7 @@ package com.francis.angularbackend.services;
 
 
 import com.francis.angularbackend.config.JwtConfig;
+import com.francis.angularbackend.entities.Role;
 import com.francis.angularbackend.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -68,6 +69,10 @@ public class JwtService {
 
     public String getEmailFromToken(String token) {
        return getClaims(token).getSubject();
+    }
+
+    public Role getRoleFromToken(String token) {
+     return Role.valueOf(getClaims(token).get("role", String.class));
     }
 
 }
