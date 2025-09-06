@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Service;
 
 
 @Configuration
@@ -35,6 +36,17 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /*
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        var provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService((UserDetailsService) passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
+
+     */
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -59,11 +71,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( c -> c
                         .requestMatchers(HttpMethod.GET,"/users").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/users/getAllUsers").permitAll()
                         .requestMatchers("/admin/hello/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST,"/users").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                       // .requestMatchers(HttpMethod.POST,"/auth/me").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/refresh").permitAll()
+
                         .anyRequest().authenticated()
 
                 )

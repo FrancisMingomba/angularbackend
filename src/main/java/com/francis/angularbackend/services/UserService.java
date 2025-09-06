@@ -21,12 +21,9 @@ public class UserService implements UserDetailsService {
         var user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("User not found"));
 
-        return new User(
-                user.getEmail(),
+        return new User(user.getEmail(),
                 user.getPassword(),
-                Collections.emptyList()
-
-        );
+                Collections.emptyList());
     }
 
 }

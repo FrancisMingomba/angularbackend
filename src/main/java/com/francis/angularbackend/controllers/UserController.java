@@ -22,13 +22,13 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController {
     private final UserRepositories userRepositories;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("")
+    @GetMapping("getAllUsers")
     public Iterable<UserDto> getAllUsers() {
 
         return userRepositories.findAll()
@@ -46,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
-    @PostMapping
+    @PostMapping("/register")
     @Operation(summary = "Add user to database.")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserRequest request,
@@ -107,6 +107,19 @@ public class UserController {
         userRepositories.save(user);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/test")
+    public ResponseEntity<Void> test(@PathVariable Long id) {
+        var user = userRepositories.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        userRepositories.delete(user);
+        return ResponseEntity.noContent().build();
+
+    }
+
+
 /*
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
