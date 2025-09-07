@@ -108,6 +108,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /*
     @DeleteMapping("/test")
     public ResponseEntity<Void> test(@PathVariable Long id) {
         var user = userRepositories.findById(id).orElse(null);
@@ -120,7 +121,7 @@ public class UserController {
     }
 
 
-/*
+
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
         var authentication =  SecurityContextHolder.getContext().getAuthentication();
